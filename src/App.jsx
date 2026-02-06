@@ -9,57 +9,34 @@ import Login from './components/Login';
 import AllProducts from './pages/AllProducts';
 import ProductCategory from './pages/ProductCategory';
 import ProductDetails from './pages/ProductDetails';
-
-
-
+import ScrollToTop from './components/ScrollToTop'; // ১. Import korun
 
 const App = () => {
-
-  const isSellerPath = useLocation().pathname.includes("seller");
-  const {showUserLogin} = useAppContext()
+  const location = useLocation();
+  const isSellerPath = location.pathname.includes("seller");
+  const {showUserLogin} = useAppContext();
 
   return (
     <div className="h-screen overflow-y-auto scrollbar-hide">
-
       
+    
+      <ScrollToTop />
 
       {isSellerPath ? null : <Navbar/>}
       {showUserLogin ? <Login/> : null}
 
-
       <Toaster />
       
-        <div className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`} >
-            <Routes>
-              <Route path='/' element={<Home/>} />
-              <Route path='/products' element={<AllProducts/>} />
-              <Route path='/products/:category' element={<ProductCategory />} />
-              <Route path='/products/:category/:id' element={<ProductDetails />} />
-              
-              
+      <div className={`${isSellerPath ? "" : "px-6 md:px-16 lg:px-24 xl:px-32"}`} >
+          <Routes>
+            <Route path='/' element={<Home/>} />
+            <Route path='/products' element={<AllProducts/>} />
+            <Route path='/products/:category' element={<ProductCategory />} />
+            <Route path='/products/:category/:id' element={<ProductDetails />} />
+          </Routes>
+      </div>
 
-              
-            </Routes>
-        </div>
-
-
-          {!isSellerPath &&  <Footer />}
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      {!isSellerPath &&  <Footer />}
     </div>
   );
 };

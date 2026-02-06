@@ -91,6 +91,7 @@ const ProductDetails = () => {
             </div>
 
         {/* ----------------related products-------------- */}
+    
 
             <div className=" flex flex-col items-center mt-20 ">
                 <div className="flex flex-col items-center w-max">
