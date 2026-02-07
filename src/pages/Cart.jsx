@@ -13,12 +13,16 @@ const Cart = () => {
     const [selectedAddress, SetSelectedAddresses] = useState(dummyAddress[0])
     const [paymentOption, setPaymentOption] = useState("COD")
 
-    const getCart = ()=>{
+    const getCart = () => {
         let tempArray = [];
         for(const key in cartItems){
-            const product = product.find((item)=>item._id === key )
-            product.quantity = cartItems[key]
-            tempArray.push(product)
+            const product = products.find((item) => item._id === key);
+            if(product){
+                tempArray.push({
+                    ...product,
+                    quantity: cartItems[key]
+                });
+            }
         }
         setCartArray(tempArray);
     }
@@ -59,22 +63,26 @@ const Cart = () => {
                                 <img className="max-w-full h-full object-cover" src={product.image[0]} alt={product.name} />
                             </div>
                             <div>
-                         <p className="hidden md:block font-semibold">{product.name}</p>
-                        <div className="font-normal text-gray-500/70">
-                        <p>Weight: <span>{product.weight || "N/A"}</span></p>
-                          <div className='flex items-center'>
-                             <p>Qty:</p>
-                                <select className='outline-none'>
-                                     {Array(cartItems[product._id] > 9 ? cartItems[product._id] : 9).fill('').map((_, index) => (
-                                         <option key={index} value={index + 1}>{index + 1}</option>
+                                <p className="hidden md:block font-semibold">{product.name}</p>
+                                <div className="font-normal text-gray-500/70">
+                                    <p>Weight: <span>{product.weight || "N/A"}</span></p>
+                                    <div className='flex items-center'>
+                                        <p>Qty:</p>
+                                        <select 
+                                            value={cartItems[product._id]}
+                                            onChange={(e) => updateCartItem(product._id, Number(e.target.value))}
+                                            className='outline-none'
+                                        >
+                                            {Array(cartItems[product._id] > 9 ? cartItems[product._id] : 9).fill('').map((_, index) => (
+                                                <option key={index} value={index + 1}>{index + 1}</option>
                                             ))}
-                                  </select>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <p className="text-center">{currency}{product.offerPrice * product.quantity}</p>
-                        <button onClick={()=> removeFromCart()} className="cursor-pointer mx-auto">
+                        <button onClick={()=> removeFromCart(product._id)} className="cursor-pointer mx-auto">
                             <img src={assets.refresh_icon} alt="remove" className="inline-block w-6 h-6" />
                         </button>
                     </div>)
@@ -94,17 +102,17 @@ const Cart = () => {
                 <div className="mb-6">
                     <p className="text-sm font-medium uppercase">Delivery Address</p>
                     <div className="relative flex justify-between items-start mt-2">
-                        <p className="text-gray-500">{selectedAddress ? `${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country} ` : "No address found}" } </p>
+                        <p className="text-gray-500">{selectedAddress ? `${selectedAddress.street}, ${selectedAddress.city}, ${selectedAddress.state}, ${selectedAddress.country} ` : "No address found"} </p>
                         <button onClick={() => setShowAddress(!showAddress)} className="text-indigo-500 hover:underline cursor-pointer">
                             Change
                         </button>
                         {showAddress && (
                             <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
                                 {addresses.map((address, index)=> (
-                                    <p onClick={() => {SetSelectedAddresses(address) ;setShowAddress(false)}} className="text-gray-500 p-2 hover:bg-gray-100">
-                                    {address.street}, {address.city}, {address.state}, {address.country}
-                                </p>
-                            ))}
+                                    <p key={index} onClick={() => {SetSelectedAddresses(address); setShowAddress(false)}} className="text-gray-500 p-2 hover:bg-gray-100 cursor-pointer">
+                                        {address.street}, {address.city}, {address.state}, {address.country}
+                                    </p>
+                                ))}
                                 <p onClick={() => navigate("/add-address")} className="text-indigo-500 text-center cursor-pointer p-2 hover:bg-indigo-500/10">
                                     Add address
                                 </p>
