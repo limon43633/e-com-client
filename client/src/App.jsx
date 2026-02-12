@@ -13,11 +13,12 @@ import ScrollToTop from './components/ScrollToTop';
 import Cart from './pages/Cart';
 import AddAddress from './pages/AddAddress';
 import MyOrders from './pages/MyOrders';
+import SellerLogin from './components/seller/SellerLogin';
 
 const App = () => {
   const location = useLocation();
   const isSellerPath = location.pathname.includes("seller");
-  const { showUserLogin } = useAppContext();
+  const { showUserLogin, isSeller } = useAppContext();
 
   return (
     // Main Wrapper Start
@@ -40,6 +41,9 @@ const App = () => {
           <Route path='/cart' element={<Cart />} />
           <Route path='/add-address' element={<AddAddress />} />
           <Route path='/my-orders' element={<MyOrders />} />
+          <Route path='/seller' element={isSeller ? null : <SellerLogin />}>
+
+          </Route>
         </Routes>
       </div>
 
